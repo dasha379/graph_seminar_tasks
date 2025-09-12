@@ -68,10 +68,31 @@ std::string diff_bit_scales(const std::string& bit1, const std::string& bit2)
 	return res;
 }
 
-std::vector<std::set<int>> gen_all_subsets(std::set<int> s)
+std::string int_to_bit(int n, int size)
 {
-	int n = s.size();
+	std::string s(size, '0');
+	for (int i = size - 1; i >= 0; --i)
+	{
+		if (n > 0)
+		{
+			s[i] = (n % 2) ? '1' : '0';
+			n/=2;
+		}
+	}
+	return s;
+}
+
+std::vector<std::string> gen_all_subsets(const int n)
+{
 	int m = pow(2, n);
+	std::vector<std::string> res;
+	for (int i = 0; i < m; ++i)
+	{
+		std::string s;
+		s += int_to_bit(i, n);
+		res.push_back(s);
+	}
+	return res;
 }
 
 int main()
@@ -86,5 +107,9 @@ int main()
 	std::string s;
 	transfer_to_bit_scale(arr, s);
 	std::cout << s << '\n';
+
+	int n = 3;
+	std::vector<std::string> a = gen_all_subsets(n);
+	for (int i = 0; i < 8; ++i) std::cout << a[i] << '\n';
 	return 0;
 }
