@@ -8,15 +8,17 @@
 const int UNIVERSUM_SIZE = 16;
 std::vector<int> UNIVERSUM(UNIVERSUM_SIZE);
 
-void transfer_to_bit_scale(const std::set<int>& arr, std::string& output)
+// TODO : turn this func from void to std::string
+std::string transfer_to_bit_scale(const std::set<int>& arr)
 {
-	output.resize(UNIVERSUM_SIZE);
+	std::string output(UNIVERSUM_SIZE, '0');
 	for (int i = 0; i < UNIVERSUM_SIZE; ++i) UNIVERSUM[i] = i + 1;
 	for (int i = 0; i < UNIVERSUM_SIZE; ++i){
 		if (arr.find(UNIVERSUM[i]) != arr.end()){
 			output[i] = '1';
 		} else output[i] = '0';
 	}
+	return output;
 }
 
 std::string union_bit_scales(const std::string& bit1, const std::string& bit2)
@@ -95,21 +97,58 @@ std::vector<std::string> gen_all_subsets(const int n)
 	return res;
 }
 
+std::vector<std::string> gray_code(const int n) // n - size of a set
+{
+	if (n <= 0) return {"0"};
+	if (n == 1) return {"0", "1"};
+	std::vector<std::string> prev = gray_code(n - 1);
+	std::vector<std::string> res;
+	for (const std::string& s : prev)
+	{
+		res.push_back("0" + s);
+	}
+	for (auto i = prev.rbegin(); i != prev.rend(); ++i)
+	{
+		res.push_back("1" + *i);
+	}
+	return res;
+}
+
+void print_(const std::vector<std::string>& arr)
+{
+	for (const std::string& s : arr)
+	{
+		std::cout << s << '\n';
+	}
+}
+
 int main()
 {
-	std::set<int> arr = {1, 2, 3, 5, 8, 12};
-	std::string bit1 = "1001010101101101";
-	std::string bit2 = "1000110101010011";
-	std::cout << union_bit_scales(bit1, bit2) << '\n';
-	std::cout << intersection_bit_scales(bit1, bit2) << '\n';
-	std::cout << addition_bit_scale(bit1) << '\n';
-	std::cout << diff_bit_scales(bit1, bit2) << '\n';
-	std::string s;
-	transfer_to_bit_scale(arr, s);
-	std::cout << s << '\n';
-
-	int n = 3;
-	std::vector<std::string> a = gen_all_subsets(n);
-	for (int i = 0; i < 8; ++i) std::cout << a[i] << '\n';
-	return 0;
+	// Инициализируем универсум один раз
+    std::set<int> arr = {1, 2, 3, 5, 8, 12};
+    
+    // Тестируем преобразование в битовую шкалу
+    std::string bit1 = transfer_to_bit_scale(arr);
+    std::cout << "Set to bit scale: " << bit1 << '\n';
+    
+    // Создаем второй тестовый набор
+    std::set<int> arr2 = {2, 4, 6, 8, 10, 12, 14, 16};
+    std::string bit2 = transfer_to_bit_scale(arr2);
+    std::cout << "Second set to bit scale: " << bit2 << '\n';
+    
+    // Тестируем операции
+    std::cout << "Union: " << union_bit_scales(bit1, bit2) << '\n';
+    std::cout << "Intersection: " << intersection_bit_scales(bit1, bit2) << '\n';
+    std::cout << "Complement of first: " << addition_bit_scale(bit1) << '\n';
+    std::cout << "Difference (first - second): " << diff_bit_scales(bit1, bit2) << '\n';
+    
+    // Тестируем генерацию подмножеств
+    int n = 4;
+    std::vector<std::string> subsets = gen_all_subsets(n);
+    std::cout << "\nAll subsets of size " << n << ":\n";
+    for (size_t i = 0; i < subsets.size(); ++i) {
+        std::cout << subsets[i] << '\n';
+    }
+    print_(gray_code(20));
+    return 0;
 }
