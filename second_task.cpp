@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 // Алгоритм формирования правильного подграфа, образованного заданным множеством вершин.
 
@@ -50,6 +51,7 @@ public:
 	}
 };
 
+// дополнение к графу
 Graph addition(Graph g){
 	int n = g.V;
 	
@@ -62,17 +64,71 @@ Graph addition(Graph g){
 	return added;
 }
 
-Graph union(Graph g1, Graph g2){
+// объединение графов
+Graph union_graphs(Graph g1, Graph g2){
 	int n = g1.V + g2.V;
 	Graph result(n);
 	for (int i = 0; i < n; ++i){
 		for (int j = 0; j < n; ++j){
-			if (i < g1.V && j < g1.V){
+			if (i < g1.V && j < g1.V && g1.adj[i][j]){
 				result.addEdge(i, j);
-			} else if (i >= g1.V && j >= g1.V) result.addEdge(i, j);
+			} else if (i >= g1.V && j >= g1.V && g2.adj[i - g1.V][j-g1.V]) result.addEdge(i, j);
 		}
 	}
 	return result;
+}
+
+// соединение графов
+Graph connection_graphs(Graph g1, Graph g2){
+	int n = g1.V + g2.V;
+	Graph result(n);
+	for (int i = 0; i < n; ++i){
+		for (int j = 0; j < n; ++j){
+			if (i < g1.V && j < g1.V && g1.adj[i][j]){
+				result.addEdge(i, j);
+			} else if (i >= g1.V && j >= g1.V && g2.adj[i - g1.V][j-g1.V]) result.addEdge(i, j);
+			else if (i < g1.V && j >= g1.V || i >= g1.V && j < g1.V) result.addEdge(i, j);
+		}
+	}
+	return result;
+}
+
+// пересечение графов
+Graph intersection_graphs(Graph g1, Graph g2){
+	int n = std::min(g1.V, g2.V);
+	Graph result(n);
+	for (int i = 0; i < n; ++i){
+		for (int j = i + 1; j < n; ++j){
+			if (g1.adj[i][j] && g2.adj[i][j]) result.addEdge(i, j);	
+		}
+	}
+	return result;
+}
+
+// удаление выбранных вершин из графа
+Graph delete_vert(std::vector<int> vertices, Graph g){
+	int n = g.V;
+	int m = vertices.size();
+	if (n < m) throw std::invalid_argument("can not delete these vertices");
+	if (n == m) throw std::invalid_argument("got an empty graph =) ");
+
+	std::vector<int> remainig_vert;
+	for (int i = 0; i < n; ++i) 
+		if (std::find(vertices.begin(), vertices.end(), i) == vertices.end())
+			remainig_vert.push_back(i);
+
+	std::vector<int> oldToNew(n, -1);
+	for (int i = 0; i < n - m; ++i)
+		oldToNew[remainig_vert[i]] = i;
+
+	Graph new_g(n - m);
+	for (int i : remainig_vert){
+		for (int j : remainig_vert){
+			if (i < j && g.adj[i][j])
+				new_g.addEdge(oldToNew[i], oldToNew[j]);
+		}
+	}
+	return new_g;
 }
 
 int main(){
@@ -93,13 +149,32 @@ int main(){
 	g.addEdge(4, 5);
 	g.printGraph();
 	std::cout << '\n';
-	std::vector<int> ver = {1, 3, 5};
-	Graph sub = g.getSubgraph(ver);
-	sub.printGraph();
-	std::cout << '\n';
-	Graph added = addition(g);
-	added.printGraph();
-	std:cout << '\n';
+	// std::vector<int> ver = {1, 3, 5};
+	// Graph sub = g.getSubgraph(ver);
+	// sub.printGraph();
+	// std::cout << '\n';
+	// Graph added = addition(g);
+	// added.printGraph();
+	// std::cout << '\n';
 
-	// TODO: check the work of union
+	Graph h(5);
+	h.addEdge(1, 4);
+	h.addEdge(2, 3);
+	h.addEdge(0, 1);
+	h.addEdge(2, 4);
+	h.addEdge(0, 3);
+
+	// Graph united = union_graphs(g, h);
+	// united.printGraph();
+	// std::cout << '\n';
+
+	// Graph connected = connection_graphs(g, h);
+	// connected.printGraph();
+	// std::cout << '\n';
+
+	// std::vector<int> vert_to_delete = {0, 2, 4};
+	// Graph new_g = delete_vert(vert_to_delete, g);
+	// new_g.printGraph();
+	Graph intersected_gr = intersection_graphs(g, h);
+	intersected_gr.printGraph();
 }
