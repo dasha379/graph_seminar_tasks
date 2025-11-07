@@ -163,6 +163,8 @@ int main(){
 	h.addEdge(0, 1);
 	h.addEdge(2, 4);
 	h.addEdge(0, 3);
+	h.printGraph();
+	std::cout << '\n';
 
 	// Graph united = union_graphs(g, h);
 	// united.printGraph();

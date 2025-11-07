@@ -4,11 +4,10 @@
 #include <string>
 #include <cmath>
 
-// how to implement an universum??
 const int UNIVERSUM_SIZE = 16;
 std::vector<int> UNIVERSUM(UNIVERSUM_SIZE);
 
-// TODO : turn this func from void to std::string
+
 std::string transfer_to_bit_scale(const std::set<int>& arr)
 {
 	std::string output(UNIVERSUM_SIZE, '0');
@@ -149,6 +148,8 @@ int main()
     for (size_t i = 0; i < subsets.size(); ++i) {
         std::cout << subsets[i] << '\n';
     }
-    print_(gray_code(20));
+    std::cout << '\n';
+    std::cout << "gray code: \n";
+    print_(gray_code(3));
     return 0;
 }
