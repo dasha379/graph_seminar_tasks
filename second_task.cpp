@@ -16,7 +16,7 @@ public:
 		adj[v][u] = 1;
 	}
 
-	Graph getSubgraph(const std::vector<int>& vertex){ // vertex = {1, 2, 5, 7} for example
+	Graph getSubgraph(const std::vector<int>& vertex){
 		for (int v : vertex){
 			if (v < 0 || v > V) throw std::invalid_argument("vertex " + std::to_string(v) + " does not exist in the graph!");
 		}

@@ -146,21 +146,21 @@ public:
 };
 
 int main(){
-    // std::cout << "=== Генерация случайного графа ===\n";
-    // int vertices = 8;
-    // double density = 0.6;
+    std::cout << "=== Генерация случайного графа ===\n";
+    int vertices = 8;
+    double density = 0.6;
 
-    // Graph g1(vertices, density);
-    // g1.stats();
-    // g1.printGraph();
-    // g1.printEdges();
+    Graph g1(vertices, density);
+    g1.stats();
+    g1.printGraph();
+    g1.printEdges();
 
-    // std::cout << "=== генерация графа Турана ===\n";
-    // int v = 7;
-    // int r = 3;
-    // TurGraph tur_g(v, r);
-    // tur_g.Graph::printGraph();
-    // tur_g.Graph::printEdges();
+    std::cout << "=== генерация графа Турана ===\n";
+    int v = 7;
+    int r = 3;
+    TurGraph tur_g(v, r);
+    tur_g.Graph::printGraph();
+    tur_g.Graph::printEdges();
 
     std::cout << "=== генерация графа Муна-Мозера ===\n";
     MoonMoserGraph gr_m(3);
